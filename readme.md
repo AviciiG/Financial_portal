@@ -19,7 +19,7 @@ Bootstrap (Фронтенд)
 Как запустить проект правильно? 
 
 Клонирование проекта: 
-git clone https://github.com/AviciiG/financial_portal.git
+git clone https://github.com/AviciiG/Financial_portal.git
 cd financial_portal
 
 
