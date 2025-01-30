@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+    command: gunicorn --bind 0.0.0.0:8000 config.wsgi:application
+    volumes:
+      - .:/app
+      - ./staticfiles:/app/staticfiles
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+      NEWS_API_KEY: 639e289f339044ef83ad2b0992e09e99
+      NEWSDATA_API_KEY: pub_668760612571052c90029e5d4f2a333e74165
+
+  db:
+    image: postgres:14
+    container_name: financial_portal-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: financial_portal
+    ports:
+      - "5433:5432"  # внешний порт на 5433
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+  redis:
+    image: redis:6
+    container_name: financial_portal-redis
+    ports:
+      - "6380:6379"  # Внешний порт изменен на 6380
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

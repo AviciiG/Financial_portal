@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовые организации</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Финансовые организации</h1>
+        <div class="row">
+            {% for organization in organizations %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <!-- Логотип компании -->
+                        {% if organization.logo %}
+                            <img src="{{ organization.logo.url }}" class="card-img-top p-3 mx-auto" alt="{{ organization.name }} Logo"
+                                 style="height: 150px; width: auto; object-fit: contain;">
+                        {% else %}
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
+                                 style="height: 150px; border-radius: 10px;">
+                                Нет логотипа
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body">
+                            <!-- Информация о компании -->
+                            <h5 class="card-title text-center">{{ organization.name }}</h5>
+                            <p><strong>Адрес:</strong> {{ organization.address }}</p>
+                            <p><strong>Статус:</strong> {{ organization.status }}</p>
+                            <p><strong>Телефон:</strong> {{ organization.phone }}</p>
+                            <p><strong>Лицензия:</strong> {{ organization.license_number }}</p>
+                            <p><strong>Дата регистрации:</strong> {{ organization.registration_date|date:"d.m.Y" }}</p>
+                            <p><strong>БИН/ИИН:</strong> {{ organization.bin_iin }}</p>
+
+                            <!-- Кнопка для открытия новостей -->
+                            <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal"
+                                    data-bs-target="#newsModal{{ organization.id }}">
+                                Новости
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Модальное окно с новостями -->
+                <div class="modal fade" id="newsModal{{ organization.id }}" tabindex="-1"
+                     aria-labelledby="newsModalLabel{{ organization.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Новости для {{ organization.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Отображение новостей -->
+                                {% if organization.news.all %}
+                                    <ul class="list-group">
+                                        {% for news in organization.news.all %}
+                                            <li class="list-group-item">
+                                                <h5>{{ news.title }}</h5>
+                                                <p>{{ news.description }}</p>
+                                                <p><strong>Дата публикации:</strong> {{ news.published_date|date:"d.m.Y, H:i" }}</p>
+                                                <a href="{{ news.source_url }}" target="_blank" class="btn btn-outline-primary">Подробнее</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted">⚠️ Новостей пока нет.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
