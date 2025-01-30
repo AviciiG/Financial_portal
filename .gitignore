@@ -1,1 +1,14 @@
+# Python
+*.pyc
+__pycache__/
+
+# Environment
 venv/
+.env
+
+# Django static and media
+staticfiles/
+media/
+
+# Docker
+*.log
